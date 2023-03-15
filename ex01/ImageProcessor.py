@@ -1,5 +1,7 @@
 import sys
 import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
 
 sys.tracebacklimit = 0
 
@@ -12,16 +14,36 @@ class ImageLoader:
             raise TypeError("Invalid image type")
 
     def __enter__(self, allow_pickle=True):
-        self.file = np.load(self.path)
+        self.file = Image.open(self.path)
         return self.file
     
     def __exit__(self, type, value, traceback):
-        self.file.close()
+        pass
 
+class ImageProcessor:
+    def load(self, path):
+        try:
+            with ImageLoader(path) as f:
+                arr = np.array(f).astype(np.float32) # convert to float32
+                return arr / 255 # normalize
+        except TypeError as e:
+            print(e)
+            return None
+
+    def display(self, array : np.ndarray):
+        try:
+            if not isinstance(array, np.ndarray):
+                raise TypeError
+            plt.imshow(array) # display the image
+            plt.show() # show the image
+        except TypeError as e:
+            print(e)
+            return None
 
 if __name__ == "__main__":
-    # with ImageLoader("ex01/numbers.txt") as f:
-    #     print(f.read())
-
-    with ImageLoader("../resources/42AI.png") as f:
-        print(f.read())
+    imp = ImageProcessor()
+    arr = imp.load("../resources/42AI.png")
+    print(repr(arr))
+    print(arr.max())
+    print(arr.min())
+    imp.display(arr)
