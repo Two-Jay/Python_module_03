@@ -56,10 +56,11 @@ class ScrapBooker():
             return None
         if not isinstance(axis, int) or axis not in [0, 1]:
             return None
+        # get array's elements without the n-th ones
         if axis == 0:
-            return np.array([row for i, row in enumerate(array) if i != n])
+            return np.array([row for i, row in enumerate(array) if i != n - 1])
         else:
-            return np.array([row for i, row in enumerate(array.T) if i != n]).T
+            return np.array([col for i, col in enumerate(array.T) if i != n - 1]).T
 
     def juxtapose(self, array, n, axis):
         """
