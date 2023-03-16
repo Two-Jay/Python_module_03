@@ -25,7 +25,9 @@ class ImageProcessor:
         try:
             with ImageLoader(path) as f:
                 arr = np.array(f).astype(np.float32) # convert to float32
-                return arr / 255 # normalize
+                # convert arr value from 0-255 to 0-1
+                norm = np.vectorize(lambda x: x / 255)
+                return norm(arr)
         except TypeError as e:
             print(e)
             return None
@@ -35,7 +37,7 @@ class ImageProcessor:
             if not isinstance(array, np.ndarray):
                 raise TypeError
             plt.imshow(array) # display the image
-            plt.show() # show the image
+            plt.show() # show the image 
         except TypeError as e:
             print(e)
             return None
